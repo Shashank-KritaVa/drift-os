@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drift OS // KritaVa AI Core</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'JetBrains Mono', monospace; background-color: #09090b; color: #d4d4d8; overflow: hidden; }
+        .glass-panel { background-color: rgba(31, 31, 35, 0.7); backdrop-filter: blur(12px); border: 1px solid #3f3f46; }
+        .flocus-font { font-family: sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+        .task-checkbox { accent-color: #71717a; cursor: pointer; }
+        .task-checkbox:checked + span { text-decoration: line-through; opacity: 0.4; }
+        .theme-midnight { background: #09090b; }
+        
+        /* Bar Graph Animation */
+        .bar-grow { animation: growUp 1s ease-out forwards; transform-origin: bottom; }
+        @keyframes growUp { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+    </style>
+</head>
+<body class="theme-midnight h-screen w-screen flex flex-col items-center justify-center relative">
+    
+    <audio id="audio-lofi" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3"></audio>
+    <audio id="audio-rain" loop src="https://cdn.pixabay.com/download/audio/2021/08/09/audio_8ee5b5657b.mp3"></audio>
+
+    <div id="auth-window" class="glass-panel p-8 rounded-xl w-96 flex flex-col gap-6 z-50">
+        <h1 class="text-2xl font-bold tracking-widest text-center text-white">DRIFT OS</h1>
+        <p class="text-xs text-gray-500 text-center -mt-4">KritaVa AI Core Initialization</p>
+        <div class="flex flex-col gap-4">
+            <input type="email" id="auth-email" placeholder="Identifier" class="bg-gray-900 border border-gray-700 p-2 rounded text-sm text-white" value="shashank@drift.os">
+            <input type="password" id="auth-pass" placeholder="Passkey" class="bg-gray-900 border border-gray-700 p-2 rounded text-sm text-white" value="********">
+            <button id="btn-login" class="bg-gray-200 text-black p-2 rounded font-bold text-sm hover:bg-white transition-all">INITIATE SEQUENCE</button>
+        </div>
+    </div>
+
+    <div id="setup-window" class="hidden glass-panel p-8 rounded-xl w-full max-w-2xl z-50 overflow-y-auto" style="max-height: 90vh;">
+        <h2 class="text-xl font-bold mb-6 border-b border-gray-700 pb-2 text-white">System Calibration</h2>
+        <div class="flex flex-col gap-4">
+            <textarea id="setup-routines" class="bg-gray-900 border border-gray-700 p-3 rounded text-sm h-24 text-white">Waking up early, managing high-volume NEET Biology foundation concepts alongside building MVP logic for NeeVLY platform.</textarea>
+            <textarea id="setup-goals" class="bg-gray-900 border border-gray-700 p-3 rounded text-sm h-24 text-white">Crack NEET for top medical college & deploy robust production-ready software systems for Tier-2 local commerce.</textarea>
+            <textarea id="setup-leaks" class="bg-gray-900 border border-gray-700 p-3 rounded text-sm h-24 text-white">Fragmented context switching and YouTube tech rabbit holes.</textarea>
+            <button id="btn-calibrate" class="bg-gray-200 text-black p-3 rounded font-bold text-sm mt-2 hover:bg-white transition-all">CALIBRATE & COMPILE</button>
+        </div>
+    </div>
+
+    <div id="workspace-window" class="hidden w-full h-full flex flex-col">
+        <header class="glass-panel h-12 flex justify-between items-center px-6 border-b-0">
+            <div class="flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-xs font-bold text-gray-300 tracking-widest">KritaVa OS // ONLINE</span>
+            </div>
+            <button id="btn-disconnect" class="text-xs text-red-500 hover:text-red-400">Disconnect</button>
+        </header>
+
+        <main class="flex-1 relative overflow-hidden p-6 pb-24 overflow-y-auto">
+            <div id="tab-matrix" class="tab-content h-full flex flex-col gap-6 max-w-5xl mx-auto w-full">
+                
+                <div class="glass-panel p-6 rounded-xl flex gap-6 w-full shrink-0">
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs mb-1 text-white"><span>Momentum</span><span id="val-mom">75.0</span></div>
+                        <div class="w-full bg-gray-900 h-2 rounded"><div id="bar-mom" class="bg-green-500 h-2 rounded transition-all duration-500 shadow-[0_0_10px_rgba(34,197,94,0.5)]" style="width: 75%;"></div></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs mb-1 text-white"><span>Horizon</span><span id="val-hor">85.0</span></div>
+                        <div class="w-full bg-gray-900 h-2 rounded"><div id="bar-hor" class="bg-blue-500 h-2 rounded transition-all duration-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]" style="width: 85%;"></div></div>
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex justify-between text-xs mb-1 text-white"><span>Friction</span><span id="val-fri">20.0</span></div>
+                        <div class="w-full bg-gray-900 h-2 rounded"><div id="bar-fri" class="bg-red-500 h-2 rounded transition-all duration-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]" style="width: 20%;"></div></div>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 w-full shrink-0">
+                    <div class="glass-panel p-6 rounded-xl w-2/3">
+                        <h3 class="text-sm font-bold text-gray-300 mb-4 border-b border-gray-700 pb-2">Weekly Throughput Analytics</h3>
+                        <div class="flex items-end justify-between h-32 mt-4 px-2">
+                            <div class="w-10 bg-gray-700 rounded-t bar-grow" style="height: 40%"></div>
+                            <div class="w-10 bg-gray-700 rounded-t bar-grow" style="height: 65%"></div>
+                            <div class="w-10 bg-gray-700 rounded-t bar-grow" style="height: 50%"></div>
+                            <div class="w-10 bg-gray-700 rounded-t bar-grow" style="height: 80%"></div>
+                            <div class="w-10 bg-gray-700 rounded-t bar-grow" style="height: 60%"></div>
+                            <div class="w-10 bg-gray-700 rounded-t bar-grow" style="height: 90%"></div>
+                            <div class="w-10 bg-gray-300 rounded-t relative bar-grow" style="height: 100%">
+                                <span class="absolute -top-6 left-1/2 transform -translate-x-1/2 text-[10px] font-bold text-white bg-gray-800 px-2 py-1 rounded">TODAY</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-6 rounded-xl w-1/3 flex flex-col justify-center gap-4">
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg text-center">
+                            <div class="text-xs text-gray-500 uppercase">Focus Score</div>
+                            <div class="text-2xl font-bold text-white">92%</div>
+                        </div>
+                        <div class="bg-gray-900 border border-gray-800 p-3 rounded-lg text-center">
+                            <div class="text-xs text-gray-500 uppercase">System Status</div>
+                            <div class="text-sm font-bold text-green-400 mt-1">OPTIMAL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 h-full w-full">
+                    <div class="flex-1 glass-panel p-6 rounded-xl flex flex-col">
+                        <h3 class="text-sm font-bold text-gray-300 border-b border-gray-700 pb-2 mb-4">Instant Actions</h3>
+                        <div id="instant-actions-list" class="flex-1 overflow-y-auto flex flex-col gap-3 pr-2">
+                            <label class="flex items-start gap-3 group"><input type="checkbox" class="task-checkbox mt-1" onchange="updateBars(this)"><span class="text-sm transition-all text-gray-300"><strong class="text-gray-500">[Engineering]</strong> Draft product logic and UI for NeeVLY platform</span></label>
+                            <label class="flex items-start gap-3 group"><input type="checkbox" class="task-checkbox mt-1" onchange="updateBars(this)"><span class="text-sm transition-all text-gray-300"><strong class="text-gray-500">[Academic]</strong> Execute deep-focus biology NEET foundation modules</span></label>
+                        </div>
+                    </div>
+                    <div class="flex-1 glass-panel p-6 rounded-xl flex flex-col">
+                        <h3 class="text-sm font-bold text-gray-300 border-b border-gray-700 pb-2 mb-4">Long-Term Architecture</h3>
+                        <div class="flex-1 overflow-y-auto flex flex-col gap-3 pr-2">
+                            <div class="border border-gray-800 p-3 rounded bg-gray-900"><div class="text-xs text-gray-500">Platform Scale</div><div class="text-sm text-gray-300">Launch robust digital infrastructure for local commerce</div></div>
+                            <div class="border border-gray-800 p-3 rounded bg-gray-900"><div class="text-xs text-gray-500">Career Milestone</div><div class="text-sm text-gray-300">Secure placement in top-tier medical college</div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-todo" class="tab-content hidden h-full max-w-2xl mx-auto flex flex-col gap-4 w-full">
+                <div class="glass-panel p-6 rounded-xl h-full flex flex-col">
+                    <h3 class="text-sm font-bold text-gray-300 border-b border-gray-700 pb-2 mb-4">Local Execution Queue</h3>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="todo-input" placeholder="Add manual parameter..." class="flex-1 bg-gray-900 border border-gray-700 p-2 text-sm rounded outline-none text-white">
+                        <button id="btn-add-todo" class="bg-gray-800 px-4 rounded text-xs text-white font-bold hover:bg-gray-700">+</button>
+                    </div>
+                    <div id="todo-list" class="flex-1 overflow-y-auto flex flex-col gap-2"></div>
+                </div>
+            </div>
+
+            <div id="tab-chat" class="tab-content hidden h-full max-w-3xl mx-auto flex flex-col w-full">
+                <div class="glass-panel p-6 rounded-xl h-full flex flex-col">
+                    <div id="chat-history" class="flex-1 overflow-y-auto flex flex-col gap-4 mb-4 pr-2 pb-4">
+                        <div class="self-start bg-gray-900 border p-3 rounded-lg text-sm border-gray-800 text-white" style="max-width: 80%;">
+                            <span class="text-xs text-gray-500 block mb-1">KritaVa AI Core</span>
+                            System ready. State your operational parameters. Tell me to generate today's to-do list.
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <input type="text" id="chat-input" placeholder="Type: 'aaj ka to do list design kro'..." class="flex-1 bg-gray-900 border border-gray-700 p-3 text-sm rounded outline-none text-white focus:border-gray-500 transition-colors">
+                        <button id="btn-send-chat" class="bg-gray-200 text-black px-6 rounded text-xs font-bold hover:bg-white transition-colors">→</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-flocus" class="tab-content hidden h-full w-full flex flex-col items-center justify-center relative flocus-font">
+                <p class="text-gray-500 text-sm mb-12 tracking-wider uppercase font-light">Execution Over Theory</p>
+                <div id="clock-display" class="font-bold tracking-tighter text-gray-100" style="font-size: 10rem; line-height: 1;">00:00</div>
+                <div class="flex gap-4 mt-12 glass-panel p-2 rounded-full font-mono text-white">
+                    <button class="pom-btn px-6 py-2 rounded-full text-xs hover:bg-gray-800 transition-colors" data-time="25">Focus</button>
+                    <button class="pom-btn px-6 py-2 rounded-full text-xs hover:bg-gray-800 transition-colors" data-time="5">Short Break</button>
+                    <button class="pom-btn px-6 py-2 rounded-full text-xs hover:bg-gray-800 transition-colors" data-time="10">Long Break</button>
+                </div>
+                <div id="timer-controls" class="hidden mt-8 flex gap-4 font-mono text-white">
+                    <button id="btn-timer-start" class="border border-gray-700 px-6 py-2 rounded text-xs hover:bg-gray-800 transition-colors">Start</button>
+                    <button id="btn-timer-reset" class="border border-gray-700 px-6 py-2 rounded text-xs hover:bg-gray-800 transition-colors">Reset</button>
+                </div>
+            </div>
+        </main>
+
+        <div class="absolute bottom-6 left-1/2 transform -translate-x-1/2 glass-panel rounded-full p-2 flex gap-2 items-center shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+            <button class="dock-btn bg-gray-800 px-4 py-2 rounded-full text-xs text-white shadow-inner" data-target="tab-matrix">Matrix</button>
+            <button class="dock-btn px-4 py-2 rounded-full text-xs text-gray-500 hover:text-white transition-colors" data-target="tab-todo">To-Do</button>
+            <button class="dock-btn px-4 py-2 rounded-full text-xs text-gray-500 hover:text-white transition-colors" data-target="tab-chat">KritaVa AI</button>
+            <button class="dock-btn px-4 py-2 rounded-full text-xs text-gray-500 hover:text-white transition-colors" data-target="tab-flocus">Focus Space</button>
+            <div class="w-px h-4 bg-gray-700 mx-2"></div>
+            <button id="btn-acoustics" class="px-4 py-2 rounded-full text-xs text-gray-500 hover:text-white transition-colors">Acoustics</button>
+        </div>
+
+        <div id="acoustics-drawer" class="hidden absolute bottom-20 right-1/2 glass-panel p-4 rounded-xl flex flex-col gap-3 w-48 z-50" style="transform: translateX(230px);">
+            <div class="flex justify-between items-center text-sm text-white">
+                <span>Lo-Fi</span><button id="btn-play-lofi" class="text-gray-500 hover:text-white text-xs px-2 py-1 bg-gray-900 rounded border border-gray-700">PLAY</button>
+            </div>
+            <div class="flex justify-between items-center text-sm text-white">
+                <span>Rain</span><button id="btn-play-rain" class="text-gray-500 hover:text-white text-xs px-2 py-1 bg-gray-900 rounded border border-gray-700">PLAY</button>
+            </div>
+            <div id="audio-status" class="text-green-500 text-center mt-2 hidden uppercase font-bold" style="font-size: 10px;">Stream Active</div>
+        </div>
+    </div>
+
+    <script>
+        const wAuth = document.getElementById('auth-window');
+        const wSetup = document.getElementById('setup-window');
+        const wWorkspace = document.getElementById('workspace-window');
+
+        // Dynamic State
+        let metrics = { mom: 75.0, hor: 85.0, fri: 20.0 };
+        let todos = [
+            { text: "Wake up routine & setup workstation", done: true },
+            { text: "Review Biology Foundation Notes", done: false }
+        ];
+
+        // UI Flow
+        document.getElementById('btn-login').addEventListener('click', () => {
+            wAuth.classList.add('hidden'); wSetup.classList.remove('hidden');
+        });
+
+        document.getElementById('btn-calibrate').addEventListener('click', () => {
+            document.getElementById('btn-calibrate').innerText = "PROCESSING...";
+            setTimeout(() => {
+                wSetup.classList.add('hidden'); wWorkspace.classList.remove('hidden');
+                renderTodos();
+            }, 1000); // 1 sec fake delay
+        });
+
+        document.getElementById('btn-disconnect').addEventListener('click', () => {
+            wWorkspace.classList.add('hidden'); wAuth.classList.remove('hidden');
+            document.getElementById('btn-calibrate').innerText = "CALIBRATE & COMPILE";
+        });
+
+        // Matrix Checkbox Logic
+        window.updateBars = function(checkbox) {
+            if (checkbox.checked) {
+                metrics.mom = Math.min(100, metrics.mom + 5);
+                metrics.hor = Math.min(100, metrics.hor + 2);
+                metrics.fri = Math.max(0, metrics.fri - 3);
+            } else {
+                metrics.mom = Math.max(0, metrics.mom - 5);
+                metrics.hor = Math.max(0, metrics.hor - 2);
+                metrics.fri = Math.min(100, metrics.fri + 3);
+            }
+            document.getElementById('bar-mom').style.width = metrics.mom + "%"; document.getElementById('val-mom').innerText = metrics.mom.toFixed(1);
+            document.getElementById('bar-hor').style.width = metrics.hor + "%"; document.getElementById('val-hor').innerText = metrics.hor.toFixed(1);
+            document.getElementById('bar-fri').style.width = metrics.fri + "%"; document.getElementById('val-fri').innerText = metrics.fri.toFixed(1);
+        };
+
+        // Dock Switching
+        document.querySelectorAll('.dock-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+                document.getElementById(e.target.dataset.target).classList.remove('hidden');
+                document.querySelectorAll('.dock-btn').forEach(b => { b.classList.remove('bg-gray-800', 'text-white', 'shadow-inner'); b.classList.add('text-gray-500'); });
+                e.target.classList.remove('text-gray-500'); e.target.classList.add('bg-gray-800', 'text-white', 'shadow-inner');
+            });
+        });
+
+        // To-Do Logic
+        function renderTodos() {
+            const list = document.getElementById('todo-list'); list.innerHTML = '';
+            todos.forEach((t, i) => { 
+                list.innerHTML += `<div class="flex items-center gap-3 border border-gray-800 p-3 rounded bg-gray-900 transition-all hover:border-gray-600"><input type="checkbox" class="task-checkbox" ${t.done ? 'checked' : ''} onchange="toggleTodo(${i}, this.checked)"><span class="flex-1 text-sm text-white ${t.done ? 'line-through opacity-40' : ''}">${t.text}</span><button onclick="deleteTodo(${i})" class="text-xs text-red-500 font-bold hover:text-red-400">X</button></div>`; 
+            });
+        }
+        document.getElementById('btn-add-todo').addEventListener('click', () => { 
+            const val = document.getElementById('todo-input').value.trim(); 
+            if (val) { todos.push({ text: val, done: false }); document.getElementById('todo-input').value = ''; renderTodos(); }
+        });
+        window.toggleTodo = function(idx, checked) { todos[idx].done = checked; renderTodos(); };
+        window.deleteTodo = function(idx) { todos.splice(idx, 1); renderTodos(); };
+
+        // AI Chat (WITH SMART AUTO-INJECT DETECTION)
+        document.getElementById('btn-send-chat').addEventListener('click', () => {
+            const msgInput = document.getElementById('chat-input');
+            const msg = msgInput.value.trim(); 
+            if (!msg) return;
+            
+            const chatHistory = document.getElementById('chat-history');
+            
+            // Add User Msg
+            chatHistory.innerHTML += `<div class="self-end bg-gray-800 p-3 rounded-lg text-sm text-white border border-gray-700" style="max-width: 80%;"><span class="text-xs text-gray-500 block mb-1">User</span>${msg}</div>`;
+            msgInput.value = ''; chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Fake AI Delay
+            setTimeout(() => {
+                let reply = "";
+                let alertHtml = "";
+                
+                // Detection keyword trigger (Hindi or English)
+                const mLow = msg.toLowerCase();
+                if (mLow.includes("to do") || mLow.includes("todo") || mLow.includes("task") || mLow.includes("aaj") || mLow.includes("design")) {
+                    reply = "Matrix execution parameters analyzed. I have generated your dual-track task list for today and injected it into your Local Queue.";
+                    
+                    // Programmatically push to the TO-DO array
+                    todos.push({ text: "Code Python Logic module for NeeVLY Platform", done: false });
+                    todos.push({ text: "Complete 50 Physics Numericals", done: false });
+                    todos.push({ text: "Execute 1-Hour Deep Work Focus Block", done: false });
+                    renderTodos(); // Refresh the tab
+                    
+                    alertHtml = `<div class="mt-3 p-2 bg-gray-800 border border-green-500/30 rounded text-[10px] text-green-400 font-mono tracking-wider uppercase">[SYSTEM ALERT] 3 Custom Tasks dynamically injected into To-Do Queue.</div>`;
+                } else {
+                    reply = "Execution is paramount. Avoid context switching. Return to your primary foundation modules and maintain trajectory.";
+                }
+
+                chatHistory.innerHTML += `<div class="self-start bg-gray-900 p-3 rounded-lg text-sm text-white border border-gray-800" style="max-width: 80%;"><span class="text-xs text-gray-500 block mb-1">KritaVa AI</span>${reply}${alertHtml}</div>`;
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+            }, 1200); // 1.2 sec typing delay
+        });
+
+        // Check enter key on inputs
+        document.getElementById('chat-input').addEventListener('keypress', function (e) { if (e.key === 'Enter') document.getElementById('btn-send-chat').click(); });
+        document.getElementById('todo-input').addEventListener('keypress', function (e) { if (e.key === 'Enter') document.getElementById('btn-add-todo').click(); });
+
+        // Flocus Timer
+        const clockDisplay = document.getElementById('clock-display'), timerControls = document.getElementById('timer-controls');
+        let clockInterval, timerInterval, timeLeft = 0, isTimerRunning = false;
+        function updateLiveClock() { clockDisplay.innerText = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }); }
+        function startLiveClock() { clearInterval(timerInterval); timerControls.classList.add('hidden'); updateLiveClock(); clockInterval = setInterval(updateLiveClock, 1000); }
+        startLiveClock(); 
+        function formatTime(sec) { clockDisplay.innerText = `${Math.floor(sec / 60).toString().padStart(2, '0')}:${(sec % 60).toString().padStart(2, '0')}`; }
+        document.querySelectorAll('.pom-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                clearInterval(clockInterval); clearInterval(timerInterval); isTimerRunning = false;
+                timeLeft = parseInt(e.target.dataset.time) * 60; formatTime(timeLeft);
+                timerControls.classList.remove('hidden'); document.getElementById('btn-timer-start').innerText = "Start";
+            });
+        });
+        document.getElementById('btn-timer-start').addEventListener('click', (e) => {
+            if (isTimerRunning) { clearInterval(timerInterval); isTimerRunning = false; e.target.innerText = "Resume"; } 
+            else { isTimerRunning = true; e.target.innerText = "Pause"; timerInterval = setInterval(() => { timeLeft--; formatTime(timeLeft); if (timeLeft <= 0) { clearInterval(timerInterval); isTimerRunning = false; alert("Interval Complete."); startLiveClock(); } }, 1000); }
+        });
+        document.getElementById('btn-timer-reset').addEventListener('click', startLiveClock);
+
+        // Audio System
+        const drawerAcous = document.getElementById('acoustics-drawer');
+        document.getElementById('btn-acoustics').addEventListener('click', () => drawerAcous.classList.toggle('hidden'));
+        function handleAudio(tAud, tBtn, oAud, oBtn) {
+            if (tAud.paused) { oAud.pause(); oBtn.innerText = "PLAY"; oBtn.classList.remove('text-green-500'); tAud.play(); tBtn.innerText = "STOP"; tBtn.classList.add('text-green-500'); document.getElementById('audio-status').classList.remove('hidden'); } 
+            else { tAud.pause(); tBtn.innerText = "PLAY"; tBtn.classList.remove('text-green-500'); document.getElementById('audio-status').classList.add('hidden'); }
+        }
+        document.getElementById('btn-play-lofi').addEventListener('click', () => handleAudio(document.getElementById('audio-lofi'), document.getElementById('btn-play-lofi'), document.getElementById('audio-rain'), document.getElementById('btn-play-rain')));
+        document.getElementById('btn-play-rain').addEventListener('click', () => handleAudio(document.getElementById('audio-rain'), document.getElementById('btn-play-rain'), document.getElementById('audio-lofi'), document.getElementById('btn-play-lofi')));
+    </script>
+</body>
+</html>
